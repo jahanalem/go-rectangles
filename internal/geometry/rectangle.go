@@ -20,6 +20,13 @@ type Rectangle struct {
 	cachedString        *string
 }
 
+type RectangleKey [4]Point
+
+func (r *Rectangle) ToKey() RectangleKey {
+	points := r.GetOrderedPoints()
+	return RectangleKey{points[0], points[1], points[2], points[3]}
+}
+
 func NewRectangle(l1, l2 Line) *Rectangle {
 	return &Rectangle{Line1: l1, Line2: l2}
 }
