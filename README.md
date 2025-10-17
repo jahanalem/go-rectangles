@@ -511,6 +511,19 @@ Don’t use it for small, single-threaded programs — a normal map is faster th
 
 ---
 
+## 📚 Further Reading & References
+
+### 🧩 For Go Concurrency
+- [Go by Example: Goroutines](https://gobyexample.com/goroutines) — simple examples of how goroutines work in practice.  
+- [Effective Go: Concurrency](https://go.dev/doc/effective_go#concurrency) — official Go guide explaining concurrency patterns.  
+- [Go Blog: Concurrency is not Parallelism](https://go.dev/blog/waza-talk) — classic article clarifying the key difference between concurrency and parallelism.
+
+### ⚙️ For Performance Characteristics
+- [Go GC: Latency Mode](https://tip.golang.org/doc/gc-guide) — official guide to Go’s garbage collector and performance tuning.  
+- [Understanding Go Sync Package](https://pkg.go.dev/sync) — documentation for Go’s synchronization primitives, including WaitGroup and sync.Map.
+
+---
+
 🚀 This project helped me understand how Go’s concurrency model really works in practice — not just theory.  
-It showed me how the concepts like goroutines, channels, and WaitGroups can build powerful, scalable programs.
+It showed me how concepts like **goroutines**, **channels**, and **WaitGroups** can build powerful, scalable programs.
 
