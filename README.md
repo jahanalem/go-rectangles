@@ -1,4 +1,5 @@
 # Go Rectangles: A Performance Comparison with C#
+*Learning Golang through concurrency, channels, and performance testing.*
 
 ## Introduction
 
