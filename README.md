@@ -59,3 +59,67 @@ This project was a fantastic opportunity to practice my Go skills and understand
 
 The results show that Go is an excellent choice for high-performance applications, especially when dealing with large amounts of data and concurrency.
 
+
+
+
+
+## ⚙️ Concurrency vs Parallelism
+
+These two words — **concurrency** and **parallelism** — look similar, but they are not the same.  
+Let’s understand them in a very simple way.
+
+---
+
+### 🧠 What is Concurrency?
+
+**Concurrency** means *doing many things at the same time in a shared period of time.*
+
+But it doesn’t mean that all things run exactly at the same moment.  
+They just **take turns quickly** — so it feels like they happen together.
+
+🟢 Example:  
+Imagine you are cooking dinner and also chatting with a friend.  
+You cut vegetables, then you check your phone, then you stir the soup.  
+You are doing both tasks *in the same time frame*, but not *at the same exact moment.*
+
+That’s **concurrency**.
+
+In Go, **goroutines** make your program concurrent — they share CPU time efficiently.
+
+---
+
+### ⚡ What is Parallelism?
+
+**Parallelism** means *doing many things at the same exact time.*
+
+This happens when you have **multiple CPU cores**, and each core runs a different task simultaneously.
+
+🟣 Example:  
+Imagine two cooks in the kitchen.  
+One is cutting vegetables while the other is boiling water — both truly at the same time.
+
+That’s **parallelism**.
+
+---
+
+### 🔍 The Difference in One Sentence
+
+| Concept | Meaning | Example |
+|----------|----------|----------|
+| **Concurrency** | Many tasks taking turns | One cook doing many things quickly |
+| **Parallelism** | Many tasks running exactly at the same time | Two cooks working together at once |
+
+---
+
+### 💡 In Go
+
+Go is designed for **concurrency first**.  
+It uses **goroutines** to let tasks run together smoothly.  
+If your computer has multiple CPU cores, Go can also run them **in parallel** — but that depends on your system and the Go scheduler.
+
+✅ So:  
+- **Goroutines → Concurrency**  
+- **Multiple CPU cores → Parallelism**
+
+
+
