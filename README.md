@@ -195,6 +195,10 @@ Explanation:
 💡 **Tip:**
 Without `WaitGroup`, your program might end before goroutines complete their work.
 
+💡 **Why use `defer wg.Done()` instead of calling it directly?**
+Because `defer` guarantees that `wg.Done()` will run **even if the goroutine exits early** due to an error or a return.  
+This makes your code safer and easier to maintain.
+
 ---
 
 ### 🟠 3. What is a Channel?
@@ -248,7 +252,11 @@ Only when the buffer becomes full does the sender have to wait.
 | **Unbuffered (`make(chan T)`)** | The sender waits until the receiver is ready to take the value. | **Strict synchronization** — both must be ready at the same time. | Slower, but ensures order and timing. | When two goroutines must work step by step together. | Handing an item **directly** from one person to another. |
 | **Buffered (`make(chan T, N)`)** | The sender can keep sending until the buffer (N) is full. | **Loose synchronization** — sender and receiver can work at different times. | Faster and more flexible, but uses more memory. | When you want higher performance and can allow the sender and receiver to work at different speeds. | Dropping letters into a **mailbox**, where the receiver can pick them up later. |
 
----
+
+💡 **Tip:**  
+Choosing the right buffer size depends on your workload.  
+A larger buffer allows more sending without waiting, but uses more memory.  
+In this project, `1000` gives a perfect balance between speed and memory usage.
 
 ✅ **In short:**
 - **Unbuffered channels** are good when you need **tight coordination** between goroutines.  
@@ -269,6 +277,11 @@ This tells the receiver goroutine:
 “No more data is coming. You can stop reading soon.”
 
 If you don’t close the channel, the program may wait forever for new data.
+
+💡 **Who should close the channel?**
+Usually, the **sender** (the one who writes data into the channel) is responsible for closing it — not the receiver.  
+Only close a channel when you are sure that no more data will be sent.  
+Receivers should simply keep reading until the channel is closed.
 
 ---
 
