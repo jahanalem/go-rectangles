@@ -296,3 +296,159 @@ Explanation in simple:
 Together, they make Go programs fast, efficient, and easy to manage — like a **team of workers sharing one smart mailbox**.
 
 
+---
+## 🧩 Understanding `sync.Map` in Go
+
+When many goroutines work together, sometimes they all need to **read and write to the same map**.  
+But normal Go maps are **not safe for concurrent use** — this means if two goroutines try to change a map at the same time, the program can crash.
+
+To solve this, Go gives us a special type called **`sync.Map`** from the `sync` package.
+
+---
+
+### 🧠 1. What is `sync.Map`?
+
+`sync.Map` is a **thread-safe map** — this means many goroutines can read and write to it **at the same time**, safely.
+
+You don’t need to use `mutex` (locks) yourself.  
+Go handles all the synchronization inside `sync.Map`.
+
+---
+
+### ⚙️ 2. How to Create It
+
+You create it like this:
+```go
+var rectsMap sync.Map
+````
+
+Now `rectsMap` is ready to use.
+It’s like a normal map, but with special methods for concurrency.
+
+---
+
+### 🔧 3. How to Use It
+
+#### 🟢 Store (add or update a value)
+
+```go
+rectsMap.Store("key1", "Rectangle A")
+```
+
+This adds a new key–value pair to the map.
+
+If the key already exists, the value is updated.
+
+---
+
+#### 🔵 Load (get a value)
+
+```go
+value, ok := rectsMap.Load("key1")
+if ok {
+    fmt.Println("Found:", value)
+} else {
+    fmt.Println("Not found")
+}
+```
+
+* `ok` is a boolean (true/false) that tells if the key exists.
+* `value` is the stored data.
+
+---
+
+#### 🟣 Delete (remove a value)
+
+```go
+rectsMap.Delete("key1")
+```
+
+This removes the key and its value from the map.
+
+---
+
+#### 🟠 Range (loop through all items)
+
+```go
+rectsMap.Range(func(key, value any) bool {
+    fmt.Println("Key:", key, "Value:", value)
+    return true // return false to stop looping early
+})
+```
+
+`Range` lets you go through all items in the map.
+You return `true` to keep looping, or `false` to stop early.
+
+---
+
+### 🧩 4. Example from the Project
+
+In `findRectanglesParallel()` function:
+
+```go
+rectsMap := sync.Map{} // Thread-safe map to store rectangles
+
+// inside goroutines:
+rectsMap.Store(rect.ToKey(), rect)
+```
+
+Explanation:
+
+* Many goroutines find rectangles at the same time.
+* Each goroutine calls `rectsMap.Store(...)` to save its rectangle.
+* Because `sync.Map` is safe, they can all write without problems.
+
+At the end:
+
+```go
+rectsMap.Range(func(key, value interface{}) bool {
+    finalRects = append(finalRects, value.(*geometry.Rectangle))
+    return true
+})
+```
+
+This collects all rectangles from the map into a slice.
+
+---
+
+### 💡 5. Why Use `sync.Map` Instead of a Normal Map?
+
+| Feature                    | `map`                | `sync.Map`           |
+| -------------------------- | -------------------- | -------------------- |
+| Thread-safe                | ❌ No                 | ✅ Yes                |
+| Needs locks (`sync.Mutex`) | ✅ Yes                | ❌ No                 |
+| Easy for concurrent access | ❌ No                 | ✅ Yes                |
+| Best for                   | single-threaded code | multi-goroutine code |
+
+---
+
+### 🧠 6. When to Use It
+
+Use `sync.Map` when:
+
+* Many goroutines must share data at the same time.
+* You don’t want to manually manage locks.
+* You care more about **convenience and safety** than absolute speed.
+
+Don’t use it for small, single-threaded programs — a normal map is faster there.
+
+---
+
+### ✅ Summary
+
+| Method                             | What It Does           |
+| ---------------------------------- | ---------------------- |
+| `Store(key, value)`                | Add or update an item  |
+| `Load(key)`                        | Read an item           |
+| `Delete(key)`                      | Remove an item         |
+| `Range(func(key, value any) bool)` | Loop through all items |
+
+🟢 In short:
+
+> **`sync.Map` is a safe shared storage** for goroutines —
+> it lets many workers read and write data at the same time **without crashing**.
+
+---
+
+
+
