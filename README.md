@@ -60,7 +60,15 @@ This project was a fantastic opportunity to practice my Go skills and understand
 The results show that Go is an excellent choice for high-performance applications, especially when dealing with large amounts of data and concurrency.
 
 
+---
 
+## Learning Golang from This Project 🧠
+
+This project is not only about performance.  
+It also helped me learn Golang step by step — especially topics like **concurrency**, **WaitGroups**, **channels**, and **sync.Map**.  
+Each section below explains one concept in plain English, with examples from my own code.
+
+---
 
 
 ## ⚙️ Concurrency vs Parallelism
@@ -266,7 +274,7 @@ go func() {
 }()
 ```
 
-Explanation in simple:
+#### Explanation (in simple words):
 
 1. `linesChan` — a shared mailbox where all goroutines put their results.
 2. `wg.Add(1)` — says “we’re starting one new worker.”
