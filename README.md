@@ -371,7 +371,7 @@ Go handles all the synchronization inside `sync.Map`.
 You create it like this:
 ```go
 var rectsMap sync.Map
-````
+```
 
 Now `rectsMap` is ready to use.
 It’s like a normal map, but with special methods for concurrency.
@@ -508,5 +508,8 @@ Don’t use it for small, single-threaded programs — a normal map is faster th
 3. Writing to a closed channel — causes a panic (runtime error).  
 4. Using the same variable inside multiple goroutines without passing it as a parameter.
 
+---
 
+🚀 This project helped me understand how Go’s concurrency model really works in practice — not just theory.  
+It showed me how the concepts like goroutines, channels, and WaitGroups can build powerful, scalable programs.
 
