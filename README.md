@@ -158,6 +158,11 @@ So, the program can do many things “at once.”
 💡 **Think of it like this:**
 A goroutine is like telling your helper, “Please do this task while I do something else.”
 
+💡 **How it works inside Go:**
+Goroutines are not system threads. They are managed by the **Go runtime scheduler**, which runs thousands of goroutines on a few operating system threads.
+The scheduler automatically pauses and resumes them so that the CPU is always busy but never overloaded.
+This is why you can easily create thousands (or even millions) of goroutines without slowing down your program.
+
 ---
 
 ### 🟣 2. What is a WaitGroup?
@@ -209,8 +214,9 @@ Here:
 
 You can:
 
-* **Send** data into the channel using `<-`
-* **Receive** data from the channel using `<-`
+* **Send** data into the channel using `channel <- value`  
+* **Receive** data from the channel using `value := <-channel`
+
 
 Example:
 
@@ -224,6 +230,30 @@ line := <-linesChan
 
 💡 **Think of a channel like a mailbox:**
 One goroutine puts letters inside (sending), and another takes them out (receiving).
+
+💡 **Important:**
+
+When you send data into an *unbuffered* channel, the sender will **wait** until another goroutine is ready to receive that data.  
+This creates **automatic synchronization** between goroutines — no extra locks or mutexes are needed.
+
+For *buffered* channels (like ours with `1000`), the sender can continue sending values **until the buffer is full**.  
+Only when the buffer becomes full does the sender have to wait.
+
+---
+
+### 🔍 Comparison: Unbuffered vs Buffered Channels
+
+| Type of Channel | How It Works | Synchronization Behavior | Speed & Flexibility | When to Use | Real-World Example |
+|-----------------|---------------|--------------------------|---------------------|--------------|--------------------|
+| **Unbuffered (`make(chan T)`)** | The sender waits until the receiver is ready to take the value. | **Strict synchronization** — both must be ready at the same time. | Slower, but ensures order and timing. | When two goroutines must work step by step together. | Handing an item **directly** from one person to another. |
+| **Buffered (`make(chan T, N)`)** | The sender can keep sending until the buffer (N) is full. | **Loose synchronization** — sender and receiver can work at different times. | Faster and more flexible, but uses more memory. | When you want higher performance and can allow the sender and receiver to work at different speeds. | Dropping letters into a **mailbox**, where the receiver can pick them up later. |
+
+---
+
+✅ **In short:**
+- **Unbuffered channels** are good when you need **tight coordination** between goroutines.  
+- **Buffered channels** are good when you want **speed** and can allow a small delay between sending and receiving.
+
 
 ---
 
@@ -457,6 +487,13 @@ Don’t use it for small, single-threaded programs — a normal map is faster th
 > it lets many workers read and write data at the same time **without crashing**.
 
 ---
+
+⚠️ **Common Mistakes for Beginners**
+
+1. Forgetting to use `wg.Wait()` — the program finishes before goroutines complete.  
+2. Forgetting to close a channel — the program waits forever for more data.  
+3. Writing to a closed channel — causes a panic (runtime error).  
+4. Using the same variable inside multiple goroutines without passing it as a parameter.
 
 
 
